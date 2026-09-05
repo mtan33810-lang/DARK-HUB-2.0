@@ -1241,48 +1241,45 @@ local Gear = {
     "Level Up Lollipop"
 }
 
-local selectedGear = Gear[1]
-local autoBuyGear = false
+local selectedGears = {}
+local autoBuyGears = false
 
 ShopTab:CreateDropdown({
-    Name = "Select Gear",
-    Options = Gear,
-    CurrentOption = {selectedGear},
-    MultipleOptions = false,
-    Flag = "SelectedGear",
-
-    Callback = function(Value)
-        local Selection = convertSelection(Value)
-
-        selectedGear =
-            Selection[1] or Gear[1]
-    end
+    Name = "Select Gears to Auto Buy",
+    Options = gearOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "GearMultiDropdownFlag",
+    Callback = function(Options)
+        selectedGears = typeof(Options) == "table" and Options or {Options}
+    end,
 })
 
 ShopTab:CreateToggle({
-    Name = "Auto Buy Selected Gear",
+    Name = "Auto Buy Multiple Gears",
     CurrentValue = false,
-    Flag = "AutoBuyGear",
-
+    Flag = "AutoBuyMultiFlag",
     Callback = function(Value)
-        autoBuyGear = Value
+        autoBuyGears = Value
+    end,
+})
 
-        if Value then
-            task.spawn(function()
-                while autoBuyGear do
-                    local Remote =
-                        getEvent("BuyGearStock")
-
-                    if Remote then
-                        Remote:FireServer(selectedGear)
+task.spawn(function()
+    while true do
+        if autoBuyGears and #selectedGears > 0 then
+            pcall(function()
+                local buyRemote = ReplicatedStorage:FindFirstChild("GameEvents") and ReplicatedStorage.GameEvents:FindFirstChild("BuyGearStock")
+                if buyRemote then
+                    for _, gearName in ipairs(selectedGears) do
+                        if not autoBuyGears then break end
+                        buyRemote:FireServer(gearName)
                     end
-
-                    task.wait(1)
                 end
             end)
         end
+        task.wait(1)
     end
-})
+end)
 
 --============================================================
 -- PET EGG SHOP
