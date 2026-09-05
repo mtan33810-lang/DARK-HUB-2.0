@@ -1306,48 +1306,45 @@ local PetEggs = {
     "Jungle Egg"
 }
 
-local selectedPetEgg = PetEggs[1]
-local autoBuyPetEgg = false
+local selectedEggs = {}
+local autoBuyEggs = false
 
 ShopTab:CreateDropdown({
-    Name = "Select Pet Egg",
-    Options = PetEggs,
-    CurrentOption = {selectedPetEgg},
-    MultipleOptions = false,
-    Flag = "SelectedPetEgg",
-
-    Callback = function(Value)
-        local Selection = convertSelection(Value)
-
-        selectedPetEgg =
-            Selection[1] or PetEggs[1]
-    end
+    Name = "Select Eggs to Auto Buy",
+    Options = eggOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "EggMultiDropdownFlag",
+    Callback = function(Options)
+        selectedEggs = typeof(Options) == "table" and Options or {Options}
+    end,
 })
 
 ShopTab:CreateToggle({
-    Name = "Auto Buy Selected Pet Egg",
+    Name = "Auto Buy Eggs",
     CurrentValue = false,
-    Flag = "AutoBuyPetEgg",
-
+    Flag = "AutoBuyEggsFlag",
     Callback = function(Value)
-        autoBuyPetEgg = Value
+        autoBuyEggs = Value
+    end,
+})
 
-        if Value then
-            task.spawn(function()
-                while autoBuyPetEgg do
-                    local Remote =
-                        getEvent("BuyPetEgg")
-
-                    if Remote then
-                        Remote:FireServer(selectedPetEgg)
+task.spawn(function()
+    while true do
+        if autoBuyEggs and #selectedEggs > 0 then
+            pcall(function()
+                local eggRemote = ReplicatedStorage:FindFirstChild("GameEvents") and ReplicatedStorage.GameEvents:FindFirstChild("BuyPetEgg")
+                if eggRemote then
+                    for _, eggType in ipairs(selectedEggs) do
+                        if not autoBuyEggs then break end
+                        eggRemote:FireServer(eggType)
                     end
-
-                    task.wait(1)
                 end
             end)
         end
+        task.wait(1)
     end
-})
+end)
 
 --============================================================
 -- AUTOMATICALLY TAB
