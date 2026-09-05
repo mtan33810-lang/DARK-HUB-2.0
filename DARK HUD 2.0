@@ -1225,6 +1225,8 @@ ShopTab:CreateToggle({
 -- GEAR SHOP
 --============================================================
 
+local Section = EventTab:CreateSection("GEAR SHOP")
+
 local Gear = {
     "Watering Can",
     "Trading Ticket",
@@ -1291,6 +1293,8 @@ ShopTab:CreateToggle({
 --============================================================
 -- PET EGG SHOP
 --============================================================
+
+local Section = EventTab:CreateSection("EGG SHOP")
 
 local PetEggs = {
     "Common Egg",
