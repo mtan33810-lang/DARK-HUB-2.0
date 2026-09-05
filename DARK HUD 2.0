@@ -1192,7 +1192,7 @@ end)
 -- GEAR SHOP
 --============================================================
 
-local Section = EventTab:CreateSection("GEAR SHOP")
+local Section = ShopTab:CreateSection("GEAR SHOP")
 
 local gearOptions = {
     "Watering Can", "Trading Ticket", "Trowel", "Recall Wrench", "Basic Sprinkler",
@@ -1245,7 +1245,7 @@ end)
 -- PET EGG SHOP
 --============================================================
 
-local Section = EventTab:CreateSection("EGG SHOP")
+local Section = ShopTab:CreateSection("EGG SHOP")
 
 local eggOptions = {
     "Common Egg", "Uncommon Egg", "Rare Egg", "Legendary Egg",
