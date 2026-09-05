@@ -1,6 +1,5 @@
 --============================================================
 -- DARK HUB
--- Merged Rayfield LocalScript
 --============================================================
 
 --============================================================
@@ -933,6 +932,8 @@ getEvent("BuyEventShopStock")
 -- HONEY COIN SHOP
 --============================================================
 
+local Section = EventTab:CreateSection("HONEY COIN SHOP")
+
 local HoneyCoinItems = {
     "Honey Honey Daisy",
     "Honey Honey Dew",
@@ -998,6 +999,9 @@ getEvent("BuyEventShopStock")
 -- ROYAL JELLY SHOP
 --============================================================
 
+local Section = EventTab:CreateSection("ROYAL JELLY SHOP")
+
+
 local RoyalJellyItems = {
     "Pollen Puffball",
     "Grape Droplet",
@@ -1057,6 +1061,8 @@ EventTab:CreateToggle({
 --============================================================
 -- BEE EGG SHOP
 --============================================================
+
+local Section = EventTab:CreateSection("BEE EGG SHOP")
 
 local BeeEggs = {
     "Common Bee Egg",
