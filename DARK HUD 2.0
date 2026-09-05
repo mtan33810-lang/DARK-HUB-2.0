@@ -1175,51 +1175,45 @@ local Seeds = {
     "Zebrazinkle"
 }
 
-local selectedSeed = Seeds[1]
-local autoBuySeed = false
+local selectedStandardSeeds = {}
+local autoBuyStandardSeeds = false
 
 ShopTab:CreateDropdown({
-    Name = "Select Seed",
-    Options = Seeds,
-    CurrentOption = {selectedSeed},
-    MultipleOptions = false,
-    Flag = "SelectedSeed",
-
-    Callback = function(Value)
-        local Selection = convertSelection(Value)
-
-        selectedSeed =
-            Selection[1] or Seeds[1]
-    end
+    Name = "Select Seeds to Auto Buy",
+    Options = standardSeedOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "StandardSeedMultiDropdownFlag",
+    Callback = function(Options)
+        selectedStandardSeeds = typeof(Options) == "table" and Options or {Options}
+    end,
 })
 
 ShopTab:CreateToggle({
-    Name = "Auto Buy Selected Seed",
+    Name = "Auto Buy Seeds",
     CurrentValue = false,
-    Flag = "AutoBuySeed",
-
+    Flag = "AutoBuyStandardSeedsFlag",
     Callback = function(Value)
-        autoBuySeed = Value
+        autoBuyStandardSeeds = Value
+    end,
+})
 
-        if Value then
-            task.spawn(function()
-                while autoBuySeed do
-                    local Remote =
-                        getEvent("BuySeedStock")
-
-                    if Remote then
-                        Remote:FireServer(
-                            "Shop",
-                            selectedSeed
-                        )
+task.spawn(function()
+    while true do
+        if autoBuyStandardSeeds and #selectedStandardSeeds > 0 then
+            pcall(function()
+                local seedRemote = ReplicatedStorage:FindFirstChild("GameEvents") and ReplicatedStorage.GameEvents:FindFirstChild("BuySeedStock")
+                if seedRemote then
+                    for _, seedName in ipairs(selectedStandardSeeds) do
+                        if not autoBuyStandardSeeds then break end
+                        seedRemote:FireServer("Shop", seedName)
                     end
-
-                    task.wait(1)
                 end
             end)
         end
+        task.wait(1)
     end
-})
+end)
 
 --============================================================
 -- GEAR SHOP
