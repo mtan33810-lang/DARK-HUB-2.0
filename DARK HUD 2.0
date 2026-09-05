@@ -1139,40 +1139,13 @@ local ShopTab = Window:CreateTab(
 
 ShopTab:CreateSection("Seed Shop")
 
-local Seeds = {
-    "Carrot",
-    "Strawberry",
-    "Blueberry",
-    "Buttercup",
-    "Orange Tulip",
-    "Corn",
-    "Daffodil",
-    "Tomato",
-    "Apple",
-    "Bamboo",
-    "Pumpkin",
-    "Watermelon",
-    "Cactus",
-    "Coconut",
-    "Dragon Fruit",
-    "Mango",
-    "Cacao",
-    "Grape",
-    "Mushroom",
-    "Pepper",
-    "Sunflower",
-    "Beanstalk",
-    "Burning Bud",
-    "Giant Pinecone",
-    "Ember Lily",
-    "Sugar Apple",
-    "Alien Apple",
-    "Crimson Thorn",
-    "Elder Strawberry",
-    "Moongrain Meadow",
-    "Octobloom",
-    "Romanesco",
-    "Zebrazinkle"
+local standardSeedOptions = {
+    "Carrot", "Strawberry", "Blueberry", "Buttercup", "Orange Tulip", "Corn",
+    "Daffodil", "Tomato", "Apple", "Bamboo", "Pumpkin", "Watermelon", "Cactus",
+    "Coconut", "Dragon Fruit", "Mango", "Cacao", "Grape", "Mushroom", "Pepper",
+    "Sunflower", "Beanstalk", "Burning Bud", "Giant Pinecone", "Ember Lily",
+    "Sugar Apple", "Alien Apple", "Crimson Thorn", "Elder Strawberry",
+    "Moongrain Meadow", "Octobloom", "Romanesco", "Zebrazinkle"
 }
 
 local selectedStandardSeeds = {}
@@ -1221,24 +1194,11 @@ end)
 
 local Section = EventTab:CreateSection("GEAR SHOP")
 
-local Gear = {
-    "Watering Can",
-    "Trading Ticket",
-    "Trowel",
-    "Recall Wrench",
-    "Basic Sprinkler",
-    "Advanced Sprinkler",
-    "Medium Toy",
-    "Medium Treat",
-    "Godly Sprinkler",
-    "Magnifying Glass",
-    "Master Sprinkler",
-    "Cleaning Spray",
-    "Favorite Tool",
-    "Harvest Tool",
-    "Friendship Pot",
-    "Grandmaster Sprinkler",
-    "Level Up Lollipop"
+local gearOptions = {
+    "Watering Can", "Trading Ticket", "Trowel", "Recall Wrench", "Basic Sprinkler",
+    "Advanced Sprinkler", "Medium Toy", "Medium Treat", "Godly Sprinkler",
+    "Magnifying Glass", "Master Sprinkler", "Cleaning Spray", "Favorite Tool",
+    "Harvest Tool", "Friendship Pot", "Grandmaster Sprinkler", "Level Up Lollipop"
 }
 
 local selectedGears = {}
@@ -1287,14 +1247,9 @@ end)
 
 local Section = EventTab:CreateSection("EGG SHOP")
 
-local PetEggs = {
-    "Common Egg",
-    "Uncommon Egg",
-    "Rare Egg",
-    "Legendary Egg",
-    "Mythical Egg",
-    "Bug Egg",
-    "Jungle Egg"
+local eggOptions = {
+    "Common Egg", "Uncommon Egg", "Rare Egg", "Legendary Egg",
+    "Mythical Egg", "Bug Egg", "Jungle Egg"
 }
 
 local selectedEggs = {}
