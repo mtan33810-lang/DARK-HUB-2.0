@@ -741,7 +741,7 @@ local EventTab = Window:CreateTab(
     4483362458
 )
 
-EventTab:CreateSection("Beanstalk")
+EventTab:CreateSection("BEANSTALK")
 
 local autoBeanstalk = false
 
@@ -783,7 +783,7 @@ EventTab:CreateToggle({
 -- BIZZY BEE
 --============================================================
 
-EventTab:CreateSection("Bizzy Bee")
+EventTab:CreateSection("🐝BIZZY BEE")
 
 local autoSubmitHoney = false
 
@@ -843,7 +843,7 @@ EventTab:CreateToggle({
 -- HONEY SEED SHOP
 --============================================================
 
-EventTab:CreateSection("Honey Seed Shop")
+EventTab:CreateSection("HONEY SEED SHOP")
 
 local HoneySeeds = {
     "Honey Carrot",
@@ -1137,7 +1137,7 @@ local ShopTab = Window:CreateTab(
 -- SEED SHOP
 --============================================================
 
-ShopTab:CreateSection("Seed Shop")
+ShopTab:CreateSection("SEED SHOP")
 
 local standardSeedOptions = {
     "Carrot", "Strawberry", "Blueberry", "Buttercup", "Orange Tulip", "Corn",
