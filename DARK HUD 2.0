@@ -860,7 +860,7 @@ local honeySeedOptions = {
 local selectedHoneySeeds = {}
 local autoBuyHoneySeeds = false
 
-EventsTab:CreateDropdown({
+EventTab:CreateDropdown({
     Name = "Select Seeds to Auto Buy",
     Options = honeySeedOptions,
     CurrentOption = {},
@@ -871,7 +871,7 @@ EventsTab:CreateDropdown({
     end,
 })
 
-EventsTab:CreateToggle({
+EventTab:CreateToggle({
     Name = "Auto Buy Seeds",
     CurrentValue = false,
     Flag = "AutoBuyHoneySeedsFlag",
@@ -916,7 +916,7 @@ local coinShopOptions = {
 local selectedShopItems = {}
 local autoBuyShopItems = false
 
-EventsTab:CreateDropdown({
+EventTab:CreateDropdown({
     Name = "Select Items to Auto Buy",
     Options = coinShopOptions,
     CurrentOption = {},
@@ -927,7 +927,7 @@ EventsTab:CreateDropdown({
     end,
 })
 
-EventsTab:CreateToggle({
+EventTab:CreateToggle({
     Name = "Auto Buy Selected Item",
     CurrentValue = false,
     Flag = "AutoBuyCoinShopFlag",
@@ -971,7 +971,7 @@ local royalJellyOptions = {
 local selectedRoyalJellyItems = {}
 local autoBuyRoyalJelly = false
 
-EventsTab:CreateDropdown({
+EventTab:CreateDropdown({
     Name = "Select Royal Jelly Shop Items",
     Options = royalJellyOptions,
     CurrentOption = {},
@@ -982,7 +982,7 @@ EventsTab:CreateDropdown({
     end,
 })
 
-EventsTab:CreateToggle({
+EventTab:CreateToggle({
     Name = "Auto Buy Royal Jelly Shop",
     CurrentValue = false,
     Flag = "AutoBuyRoyalJellyShopFlag",
@@ -1025,7 +1025,7 @@ local beeEggOptions = {
 local selectedBeeEggs = {}
 local autoBuyBeeEggs = false
 
-EventsTab:CreateDropdown({
+EventTab:CreateDropdown({
     Name = "Select Eggs to Auto Buy",
     Options = beeEggOptions,
     CurrentOption = {},
@@ -1036,7 +1036,7 @@ EventsTab:CreateDropdown({
     end,
 })
 
-EventsTab:CreateToggle({
+EventTab:CreateToggle({
     Name = "Auto Buy Bee Eggs",
     CurrentValue = false,
     Flag = "AutoBuyBeeEggsFlag",
