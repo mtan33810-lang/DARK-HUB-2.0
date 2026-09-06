@@ -1461,27 +1461,37 @@ AutomaticallyTab:CreateToggle({
     end
 })
 
+local CollectPlantDropdown = AutomaticallyTab:CreateDropdown({
+    Name = "Select Plants",
+    Options = ALL_PLANTS,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "SelectedCollectPlants",
+    Callback = function(Value)
+        selectedCollectPlants = convertSelection(Value)
+    end
+})
+
 AutomaticallyTab:CreateInput({
     Name = "Search Plant",
     PlaceholderText = "Type plant name...",
     RemoveTextAfterFocusLost = false,
     Flag = "PlantSearch",
-
     Callback = function(Text)
-        print("Plant search:", Text)
-    end
-})
+        local filtered = {}
+        local search = string.lower(Text)
 
-AutomaticallyTab:CreateDropdown({
-    Name = "Select Plants",
-    Options = ALL_PLANTS,
-    CurrentOption = {},
-    MultipleOptions = true,
-    Flag = "SelectedPlants",
+        if search == "" then
+            filtered = ALL_PLANTS
+        else
+            for _, plant in ipairs(ALL_PLANTS) do
+                if string.find(string.lower(plant), search, 1, true) then
+                    table.insert(filtered, plant)
+                end
+            end
+        end
 
-    Callback = function(Value)
-        selectedCollectPlants =
-            convertSelection(Value)
+        CollectPlantDropdown:Refresh(filtered)
     end
 })
 
