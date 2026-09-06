@@ -907,65 +907,54 @@ EventsTab:CreateToggle({
 
 local Section = EventTab:CreateSection("HONEY COIN SHOP")
 
-local HoneyCoinItems = {
-    "Honey Honey Daisy",
-    "Honey Honey Dew",
-    "Honey Hive Seed Pack",
-    "Honey Ambercomb",
-    "Pollen Radar 2026",
-    "Honey Coneflower",
-    "Hive Egg",
-    "Hive Crate",
-    "Professor Bee",
-    "Honey Badger",
-    "Honey Birds of Paradise",
-    "Honey Honey Hollow"
+local coinShopOptions = {
+    "Honey Honey Daisy", "Honey Honey Dew", "Honey Hive Seed Pack", "Honey Ambercomb",
+    "Pollen Radar 2026", "Honey Coneflower", "Hive Egg", "Hive Crate",
+    "Professor Bee", "Honey Badger", "Honey Birds of Paradise", "Honey Honey Hollow"
 }
 
-local selectedHoneyCoin = HoneyCoinItems[1]
-local autoBuyHoneyCoin = false
+local selectedShopItems = {}
+local autoBuyShopItems = false
 
-EventTab:CreateDropdown({
-    Name = "Select Honey Coin Item",
-    Options = HoneyCoinItems,
-    CurrentOption = {selectedHoneyCoin},
-    MultipleOptions = false,
-    Flag = "HoneyCoinItem",
-
-    Callback = function(Value)
-        local Selection = convertSelection(Value)
-
-        selectedHoneyCoin =
-            Selection[1] or HoneyCoinItems[1]
-    end
+EventsTab:CreateDropdown({
+    Name = "Select Items to Auto Buy",
+    Options = coinShopOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "CoinShopMultiDropdownFlag",
+    Callback = function(Options)
+        selectedShopItems = typeof(Options) == "table" and Options or {Options}
+    end,
 })
 
-EventTab:CreateToggle({
-    Name = "Auto Buy Honey Coin Item",
+EventsTab:CreateToggle({
+    Name = "Auto Buy Selected Item",
     CurrentValue = false,
-    Flag = "AutoBuyHoneyCoin",
-
+    Flag = "AutoBuyCoinShopFlag",
     Callback = function(Value)
-        autoBuyHoneyCoin = Value
+        autoBuyShopItems = Value
 
         if Value then
             task.spawn(function()
-                while autoBuyHoneyCoin do
-                    local Remote =
-getEvent("BuyEventShopStock")
+                while autoBuyShopItems do
+                    if #selectedShopItems > 0 then
+                        pcall(function()
+                            local gameEvents = ReplicatedStorage:FindFirstChild("GameEvents")
+                            local buyEvent = gameEvents and gameEvents:FindFirstChild("BuyEventShopStock")
 
-                    if Remote then
-                        Remote:FireServer(
-                            selectedHoneyCoin,
-                            "Honey Coin Shop"
-                        )
+                            if buyEvent and buyEvent:IsA("RemoteEvent") then
+                                for _, itemName in ipairs(selectedShopItems) do
+                                    if not autoBuyShopItems then break end
+                                    buyEvent:FireServer(itemName, "Honey Coin Shop")
+                                end
+                            end
+                        end)
                     end
-
                     task.wait(1)
                 end
             end)
         end
-    end
+    end,
 })
 
 --============================================================
