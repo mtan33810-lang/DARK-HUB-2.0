@@ -845,87 +845,60 @@ EventTab:CreateToggle({
 
 EventTab:CreateSection("HONEY SEED SHOP")
 
-local HoneySeeds = {
-    "Honey Carrot",
-    "Honey Strawberry",
-    "Honey Blueberry",
-    "Honey Buttercup",
-    "Honey Orange Tulip",
-    "Honey Corn",
-    "Honey Daffodil",
-    "Honey Tomato",
-    "Honey Apple",
-    "Honey Bamboo",
-    "Honey Pumpkin",
-    "Honey Watermelon",
-    "Honey Cactus",
-    "Honey Coconut",
-    "Honey Dragon Fruit",
-    "Honey Mango",
-    "Honey Cacao",
-    "Honey Grape",
-    "Honey Mushroom",
-    "Honey Pepper",
-    "Honey Sunflower",
-    "Honey Beanstalk",
-    "Honey Burning Bud",
-    "Honey Giant Pinecone",
-    "Honey Ember Lily",
-    "Honey Sugar Apple",
-    "Honey Alien Apple",
-    "Honey Crimson Thorn",
-    "Honey Elder Strawberry",
-    "Honey Moongrain Meadow",
-    "Honey Octobloom",
-    "Honey Romanesco",
-    "Honey Zebrazinkle"
+local honeySeedOptions = {
+    "Honey Carrot", "Honey Strawberry", "Honey Blueberry", "Honey Buttercup",
+    "Honey Orange Tulip", "Honey Corn", "Honey Daffodil", "Honey Tomato",
+    "Honey Apple", "Honey Bamboo", "Honey Pumpkin", "Honey Watermelon",
+    "Honey Cactus", "Honey Coconut", "Honey Dragon Fruit", "Honey Mango",
+    "Honey Cacao", "Honey Grape", "Honey Mushroom", "Honey Pepper",
+    "Honey Sunflower", "Honey Beanstalk", "Honey Burning Bud", "Honey Giant Pinecone",
+    "Honey Ember Lily", "Honey Sugar Apple", "Honey Alien Apple", "Honey Crimson Thorn",
+    "Honey Elder Strawberry", "Honey Moongrain Meadow", "Honey Octobloom",
+    "Honey Romanesco", "Honey Zebrazinkle"
 }
 
-local selectedHoneySeed = HoneySeeds[1]
-local autoBuyHoneySeed = false
+local selectedHoneySeeds = {}
+local autoBuyHoneySeeds = false
 
-EventTab:CreateDropdown({
-    Name = "Select Honey Seed",
-    Options = HoneySeeds,
-    CurrentOption = {selectedHoneySeed},
-    MultipleOptions = false,
-    Flag = "HoneySeed",
-
-    Callback = function(Value)
-        local Selection = convertSelection(Value)
-
-        selectedHoneySeed =
-            Selection[1] or HoneySeeds[1]
-    end
+EventsTab:CreateDropdown({
+    Name = "Select Seeds to Auto Buy",
+    Options = honeySeedOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "EventSeedDropdownFlag",
+    Callback = function(Options)
+        selectedHoneySeeds = typeof(Options) == "table" and Options or {Options}
+    end,
 })
 
-EventTab:CreateToggle({
-    Name = "Auto Buy Selected Honey Seed",
+EventsTab:CreateToggle({
+    Name = "Auto Buy Seeds",
     CurrentValue = false,
-    Flag = "AutoBuyHoneySeed",
-
+    Flag = "AutoBuyHoneySeedsFlag",
     Callback = function(Value)
-        autoBuyHoneySeed = Value
+        autoBuyHoneySeeds = Value
 
         if Value then
             task.spawn(function()
-                while autoBuyHoneySeed do
-                    local Remote =
+                while autoBuyHoneySeeds do
+                    if selectedHoneySeeds and #selectedHoneySeeds > 0 then
+                        pcall(function()
+                            local gameEvents = ReplicatedStorage:FindFirstChild("GameEvents")
+                            local buyEvent = gameEvents and gameEvents:FindFirstChild("BuyEventShopStock")
 
-getEvent("BuyEventShopStock")
-
-                    if Remote then
-                        Remote:FireServer(
-                            selectedHoneySeed,
-                            "Honey Seed Shop"
-                        )
+                            if buyEvent and buyEvent:IsA("RemoteEvent") then
+                                for _, seed in ipairs(selectedHoneySeeds) do
+                                    if not autoBuyHoneySeeds then break end
+                                    buyEvent:FireServer(seed, "Honey Seed Shop")
+                                end
+                            end
+                        end)
                     end
-
                     task.wait(1)
                 end
             end)
         end
-    end
+    end,
 })
 
 --============================================================
