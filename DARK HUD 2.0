@@ -779,36 +779,28 @@ EventTab:CreateToggle({
     end
 })
 
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local GoldCauldronSubmitAll = ReplicatedStorage:WaitForChild("GameEvents"):WaitForChild("Events"):WaitForChild("BeanstalkEvent"):WaitForChild("GoldCauldronSubmitAll")
+local GoldCauldronSubmitAll = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Events"):WaitForChild("BeanstalkEvent"):WaitForChild("GoldCauldronSubmitAll")
 
 local toggled = false
-local delayTime = 5 -- Time in seconds between each submission
 
--- Function to start/stop the submit loop
-local function toggleSubmit()
-	toggled = not toggled
-	
-	if toggled then
-		print("Submit All: ON")
-		task.spawn(function()
-			while toggled do
-				GoldCauldronSubmitAll:FireServer()
-				task.wait(delayTime)
-			end
-		end)
-	else
-		print("Submit All: OFF")
-	end
-end
-
--- Example: Triggering the toggle with a ScreenGui TextButton
-local button = script.Parent -- Assuming this LocalScript is inside a TextButton
-button.MouseButton1Click:Connect(function()
-	toggleSubmit()
-	button.Text = toggled and "Submit All: ON" or "Submit All: OFF"
-end)
-
+EventTab:CreateToggle({
+	Name = "Auto Submit Gold Cauldron",
+	CurrentValue = false,
+	Flag = "GoldCauldronToggle",
+	Callback = function(Value)
+		toggled = Value
+		if toggled then
+			task.spawn(function()
+				while toggled do
+					pcall(function()
+						GoldCauldronSubmitAll:FireServer()
+					end)
+					task.wait(5)
+				end
+			end)
+		end
+	end,
+})
 
 --============================================================
 -- BIZZY BEE
