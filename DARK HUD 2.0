@@ -1018,64 +1018,53 @@ EventsTab:CreateToggle({
 
 local Section = EventTab:CreateSection("BEE EGG SHOP")
 
-local BeeEggs = {
-    "Common Bee Egg",
-    "Rare Bee Egg",
-    "Mythical Bee Egg",
-    "Transcendent Bee Egg"
+local beeEggOptions = {
+    "Common Bee Egg", "Rare Bee Egg", "Mythical Bee Egg", "Transcendent Bee Egg"
 }
 
-local selectedBeeEgg = BeeEggs[1]
-local autoBuyBeeEgg = false
+local selectedBeeEggs = {}
+local autoBuyBeeEggs = false
 
-EventTab:CreateDropdown({
-    Name = "Select Bee Egg",
-    Options = BeeEggs,
-    CurrentOption = {selectedBeeEgg},
-    MultipleOptions = false,
-    Flag = "BeeEgg",
-
-    Callback = function(Value)
-        local Selection = convertSelection(Value)
-
-        selectedBeeEgg =
-            Selection[1] or BeeEggs[1]
-    end
+EventsTab:CreateDropdown({
+    Name = "Select Eggs to Auto Buy",
+    Options = beeEggOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "BeeEggShopMultiDropdownFlag",
+    Callback = function(Options)
+        selectedBeeEggs = typeof(Options) == "table" and Options or {Options}
+    end,
 })
 
-EventTab:CreateToggle({
-    Name = "Auto Buy Bee Egg",
+EventsTab:CreateToggle({
+    Name = "Auto Buy Bee Eggs",
     CurrentValue = false,
-    Flag = "AutoBuyBeeEgg",
-
+    Flag = "AutoBuyBeeEggsFlag",
     Callback = function(Value)
-        autoBuyBeeEgg = Value
+        autoBuyBeeEggs = Value
 
         if Value then
             task.spawn(function()
-                while autoBuyBeeEgg do
-                    local Colony =
-                        GameEvents:FindFirstChild(
-                            "BeeColonyEggShopService"
-                        )
+                while autoBuyBeeEggs do
+                    if #selectedBeeEggs > 0 then
+                        pcall(function()
+                            local gameEvents = ReplicatedStorage:FindFirstChild("GameEvents")
+                            local eggShopService = gameEvents and gameEvents:FindFirstChild("BeeColonyEggShopService")
+                            local buyEggFunc = eggShopService and eggShopService:FindFirstChild("BuyBeeEggStock")
 
-                    local BuyEgg =
-                        Colony
-                        and Colony:FindFirstChild(
-                            "BuyBeeEggStock"
-                        )
-
-                    if BuyEgg then
-                        BuyEgg:InvokeServer(
-                            selectedBeeEgg
-                        )
+                            if buyEggFunc and buyEggFunc:IsA("RemoteFunction") then
+                                for _, eggName in ipairs(selectedBeeEggs) do
+                                    if not autoBuyBeeEggs then break end
+                                    buyEggFunc:InvokeServer(eggName)
+                                end
+                            end
+                        end)
                     end
-
                     task.wait(1)
                 end
             end)
         end
-    end
+    end,
 })
 
 --============================================================
