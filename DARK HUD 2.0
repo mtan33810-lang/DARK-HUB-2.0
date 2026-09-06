@@ -963,61 +963,53 @@ EventsTab:CreateToggle({
 
 local Section = EventTab:CreateSection("ROYAL JELLY SHOP")
 
-
-local RoyalJellyItems = {
-    "Pollen Puffball",
-    "Grape Droplet",
-    "Carpenter Bee",
-    "Pet Shard RoyalJelly",
-    "Royal Jelly Fountain",
-    "King Bee",
-    "Pohutukawa"
+local royalJellyOptions = {
+    "Pollen Puffball", "Grape Droplet", "Carpenter Bee",
+    "Pet Shard RoyalJelly", "Royal Jelly Fountain", "King Bee", "Pohutukawa"
 }
 
-local selectedRoyalJelly = RoyalJellyItems[1]
+local selectedRoyalJellyItems = {}
 local autoBuyRoyalJelly = false
 
-EventTab:CreateDropdown({
-    Name = "Select Royal Jelly Item",
-    Options = RoyalJellyItems,
-    CurrentOption = {selectedRoyalJelly},
-    MultipleOptions = false,
-    Flag = "RoyalJellyItem",
-
-    Callback = function(Value)
-        local Selection = convertSelection(Value)
-
-        selectedRoyalJelly =
-            Selection[1] or RoyalJellyItems[1]
-    end
+EventsTab:CreateDropdown({
+    Name = "Select Royal Jelly Shop Items",
+    Options = royalJellyOptions,
+    CurrentOption = {},
+    MultipleOptions = true,
+    Flag = "RoyalJellyShopMultiDropdownFlag",
+    Callback = function(Options)
+        selectedRoyalJellyItems = typeof(Options) == "table" and Options or {Options}
+    end,
 })
 
-EventTab:CreateToggle({
-    Name = "Auto Buy Royal Jelly Item",
+EventsTab:CreateToggle({
+    Name = "Auto Buy Royal Jelly Shop",
     CurrentValue = false,
-    Flag = "AutoBuyRoyalJelly",
-
+    Flag = "AutoBuyRoyalJellyShopFlag",
     Callback = function(Value)
         autoBuyRoyalJelly = Value
 
         if Value then
             task.spawn(function()
                 while autoBuyRoyalJelly do
-                    local Remote =
-                        getEvent("BuyEventShopStock")
+                    if #selectedRoyalJellyItems > 0 then
+                        pcall(function()
+                            local gameEvents = ReplicatedStorage:FindFirstChild("GameEvents")
+                            local buyEvent = gameEvents and gameEvents:FindFirstChild("BuyEventShopStock")
 
-                    if Remote then
-                        Remote:FireServer(
-                            selectedRoyalJelly,
-                            "Royal Jelly Shop"
-                        )
+                            if buyEvent and buyEvent:IsA("RemoteEvent") then
+                                for _, itemName in ipairs(selectedRoyalJellyItems) do
+                                    if not autoBuyRoyalJelly then break end
+                                    buyEvent:FireServer(itemName, "Royal Jelly Shop")
+                                end
+                            end
+                        end)
                     end
-
                     task.wait(1)
                 end
             end)
         end
-    end
+    end,
 })
 
 --============================================================
