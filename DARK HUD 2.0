@@ -732,6 +732,22 @@ HomeTab:CreateSlider({
     end
 })
 
+HomeTab:CreateSection("Setting")
+
+local SettingsService = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("SettingsService")
+
+HomeTab:CreateToggle({
+	Name = "Remove Notifications",
+	CurrentValue = false,
+	Flag = "DisableNotificationsToggle",
+	Callback = function(Value)
+		pcall(function()
+			SettingsService:FireServer("SetSetting", "ToggleNotifications", not Value)
+		end)
+	end,
+})
+
+
 --============================================================
 -- EVENT TAB
 --============================================================
