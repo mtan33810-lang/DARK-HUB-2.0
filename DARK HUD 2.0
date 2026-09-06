@@ -1317,7 +1317,7 @@ local AutomaticallyTab = Window:CreateTab(
 -- AUTO WATER UI
 --============================================================
 
-AutomaticallyTab:CreateSection("Auto Water")
+AutomaticallyTab:CreateSection("AUTO WATERING")
 
 AutomaticallyTab:CreateToggle({
     Name = "Auto Water Plants",
@@ -1431,7 +1431,7 @@ AutomaticallyTab:CreateSlider({
 -- AUTO COLLECT UI
 --============================================================
 
-AutomaticallyTab:CreateSection("Auto Collect")
+AutomaticallyTab:CreateSection("AUTO COLLECT PLANTS")
 
 AutomaticallyTab:CreateToggle({
     Name = "Auto Collect ALL Plants",
@@ -1495,6 +1495,8 @@ AutomaticallyTab:CreateInput({
     end
 })
 
+AutomaticallyTab:CreateSection("AUTO COLLECT MUTATED PPANTS")
+
 AutomaticallyTab:CreateToggle({
     Name = "Auto Collect Selected Mutations",
     CurrentValue = false,
@@ -1547,6 +1549,8 @@ AutomaticallyTab:CreateButton({
         })
     end
 })
+
+AutomaticallyTab:CreateSection("Settings")
 
 AutomaticallyTab:CreateSlider({
     Name = "Collection Radius",
