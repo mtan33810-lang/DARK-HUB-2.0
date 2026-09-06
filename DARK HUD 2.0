@@ -795,6 +795,36 @@ EventTab:CreateToggle({
     end
 })
 
+local ClaimRewardRE = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Events"):WaitForChild("BeanstalkEvent"):WaitForChild("BeanstalkREClaimReward")
+
+local toggled = false
+local MAX_REWARDS = 5 -- Adjust if there are more reward indices
+
+EventTab:CreateToggle({
+	Name = "Auto Claim All Rewards",
+	CurrentValue = false,
+	Flag = "AutoClaimRewardsToggle",
+	Callback = function(Value)
+		toggled = Value
+		if toggled then
+			task.spawn(function()
+				while toggled do
+					for i = 1, MAX_REWARDS do
+						if not toggled then break end
+						pcall(function()
+							ClaimRewardRE:FireServer(i)
+						end)
+						task.wait(0.1)
+					end
+					task.wait(1)
+				end
+			end)
+		end
+	end,
+})
+
+EventTab:CreateSection("GOLD CAULDRON")
+
 local GoldCauldronSubmitAll = game:GetService("ReplicatedStorage"):WaitForChild("GameEvents"):WaitForChild("Events"):WaitForChild("BeanstalkEvent"):WaitForChild("GoldCauldronSubmitAll")
 
 local toggled = false
